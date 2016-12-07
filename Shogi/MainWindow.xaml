@@ -1,0 +1,127 @@
+﻿<Window x:Class="Shogi.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Shogi"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        Title="MainWindow" MinHeight="720" MinWidth="1280" Height="720" Width="1280">
+    <Window.Resources>
+        <!--TODO 一時的なスタイル-->
+        <Style TargetType="Label" x:Key="TodoKomaDai">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="ContentStringFormat" Value="TODO {0}"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Blue"/>
+            <Setter Property="Foreground" Value="Blue"/>
+        </Style>
+    </Window.Resources>
+    <!--背景設定-->
+    <Window.Background>
+        <ImageBrush ImageSource="Image/Background.jpg"/>
+    </Window.Background>
+    <!--スタイル参照-->
+    <DockPanel Margin="32">
+        <!--ゲーム-->
+        <Grid DockPanel.Dock="Left" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="224"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="224"/>
+            </Grid.ColumnDefinitions>
+            <!--上の駒台-->
+            <Grid Grid.Column="0" VerticalAlignment="Top" Width="192" Height="256">
+                <Grid.Background>
+                    <ImageBrush ImageSource="Image/Dai.png"/>
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.ColumnSpan="2" Content="歩" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="1" Grid.Column="0" Content="香" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="1" Grid.Column="1" Content="桂" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="2" Grid.Column="0" Content="銀" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="2" Grid.Column="1" Content="金" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="3" Grid.Column="0" Content="角" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="3" Grid.Column="1" Content="飛" Style="{StaticResource TodoKomaDai}"/>
+            </Grid>
+            <!--下の駒台-->
+            <Grid Grid.Column="2" VerticalAlignment="Bottom" Width="192" Height="256">
+                <Grid.Background>
+                    <ImageBrush ImageSource="Image/Dai.png"/>
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="3" Grid.ColumnSpan="2" Content="歩" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="2" Grid.Column="1" Content="香" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="2" Grid.Column="0" Content="桂" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="1" Grid.Column="1" Content="銀" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="1" Grid.Column="0" Content="金" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="0" Grid.Column="1" Content="角" Style="{StaticResource TodoKomaDai}"/>
+                <Label Grid.Row="0" Grid.Column="0" Content="飛" Style="{StaticResource TodoKomaDai}"/>
+            </Grid>
+            <!--盤面-->
+            <Grid Grid.Column="1" Width="466" Height="556">
+                <Grid.Background>
+                    <ImageBrush ImageSource="Image/Ban.png"/>
+                </Grid.Background>
+                <!--駒表示用-->
+                <UniformGrid x:Name="MainMap" Margin="26" Columns="9" Rows="9">
+                    <UniformGrid.Resources>
+                        <ResourceDictionary>
+                            <!--コンバーター定義-->
+                            <local:KomaConverter x:Key="cvtKoma"/>
+                            <!--駒-->
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid Background="#01000000">
+                                                <Grid Background="{TemplateBinding Content, 
+                                                    Converter={StaticResource cvtKoma}}"/>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ResourceDictionary>
+                    </UniformGrid.Resources>
+                </UniformGrid>
+                <!--マスク表示用-->
+                <UniformGrid x:Name="MaskMap" Margin="26" Columns="9" Rows="9">
+                    <UniformGrid.Resources>
+                        <ResourceDictionary>
+                            <!--マスク-->
+                            <Style TargetType="Grid">
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="Opacity" Value="0.4"/>
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </Style>
+                        </ResourceDictionary>
+                    </UniformGrid.Resources>
+                </UniformGrid>
+            </Grid>
+        </Grid>
+        
+        <Button DockPanel.Dock="Right" Content="再開" FontSize="64"
+                VerticalAlignment="Top" Click="Reset_Click"/>
+        
+    </DockPanel>
+</Window>
